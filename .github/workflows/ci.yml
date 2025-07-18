@@ -49,10 +49,12 @@ jobs:
 
     - name: Set up DVC
       run: |
+        source .env/bin/activate
         dvc pull data
     
     - name: Run tests 
       run: |
+        source .env/bin/activate
         python3 train.py 2>&1 > test_output.txt
   
     - name: Setup CML
