@@ -9,10 +9,18 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import joblib
 import numpy as np
 import json
+from feast import FeatureStore
 
-
+store = FeatureStore(repo_path="Feast/feature_repo")
 # Load dataset
-df = pd.read_csv("data/housing.csv")
+entity_df = pd.read_csv("data/entity.csv", parse_dates=['event_timestamp'])
+
+# Retrieve historical features using Feast
+# This gets features at specific points in time for training
+df = store.get_historical_features(
+    entity_df=entity_df,
+    features=store.get_feature_service("feast_model_v1")
+).to_df()
 
 # Separate features and target
 X = df.drop("median_house_value", axis=1)
