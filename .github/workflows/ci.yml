@@ -34,7 +34,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        uv tool install feast[gcp] dvc[gs] mlflow
+        uv tool install feast[gcp] 
+        uv tool install dvc[gs] 
 
     - name: Set up DVC
       run: |
