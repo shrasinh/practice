@@ -18,10 +18,11 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Install the latest version of uv and set the python version to 3.13t
+    - name: Install the latest version of uv
       uses: astral-sh/setup-uv@v6
-      with:
-        python-version: 3.12
+      
+    - name: Install Python 3.12
+      run: uv python install 3.12
     
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
