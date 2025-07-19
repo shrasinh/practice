@@ -18,11 +18,18 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Install the latest version of uv
-      uses: astral-sh/setup-uv@v6
-      
-    - name: Install Python 3.12
-      run: uv python install 3.12
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
@@ -34,18 +41,22 @@ jobs:
     
     - name: Install dependencies
       run: |
-        uv tool install feast[gcp] 
-        uv tool install dvc[gs] 
-        uv tool install mlflow
+        python -m pip install --upgrade pip
+        python -m pip install uv
+        uv venv --python 3.12 .env
+        source .env/bin/activate
+        uv pip install feast[gcp] dvc[gs] mlflow
 
     - name: Set up DVC
       run: |
+        source .env/bin/activate
         dvc pull data
     
     - name: Run tests 
       run: |
+        source .env/bin/activate
         mkdir artifacts
-        uv run train.py 2>&1 > test_output.txt
+        python3 train.py 2>&1 > test_output.txt
   
     - name: Setup CML
       uses: iterative/setup-cml@v2
