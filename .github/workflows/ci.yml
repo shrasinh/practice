@@ -33,7 +33,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        uv pip install feast[gcp] dvc[gs] mlflow
+        uv pip install --system feast[gcp] dvc[gs] mlflow
 
     - name: Set up DVC
       run: |
