@@ -3,6 +3,9 @@ name: CI Pipeline with Model Testing
 on:
   pull_request:
     branches: [ main ]
+    
+env:
+  UV_SYSTEM_PYTHON: 1
 
 jobs:
   test-and-report:
@@ -34,7 +37,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        uv pip install --system feast[gcp] dvc[gs] mlflow
+        uv pip install feast[gcp] dvc[gs] mlflow
 
     - name: Set up DVC
       run: |
